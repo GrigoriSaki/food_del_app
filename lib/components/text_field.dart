@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
-  MyTextField(
+  const MyTextField(
       {super.key,
       required this.controller,
       required this.hintText,
