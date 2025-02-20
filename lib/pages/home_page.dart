@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:food_app/components/my_current_location.dart';
 import 'package:food_app/components/my_description_box.dart';
 import 'package:food_app/components/my_drawer.dart';
+import 'package:food_app/components/my_food_tile.dart';
 import 'package:food_app/components/my_sliver_app_bar.dart';
 import 'package:food_app/components/my_tab_bar.dart';
 import 'package:food_app/models/food.dart';
 import 'package:food_app/models/restaurant.dart';
+import 'package:food_app/pages/food_page.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,12 +46,18 @@ class _HomePageState extends State<HomePage>
     return FoodCategory.values.map((category) {
       List<Food> categoryMenu = filterMenuByCategory(category, fullMenu);
       return ListView.builder(
+        padding: EdgeInsets.zero,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              categoryMenu[index].name,
-            ),
-          );
+          final food = categoryMenu[index];
+          return MyFoodTile(
+              food: food,
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FoodPage(food: food),
+                    ));
+              });
         },
         itemCount: categoryMenu.length,
         physics: NeverScrollableScrollPhysics(),
