@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:food_app/models/cart_item.dart';
 import 'package:food_app/models/food.dart';
 
 class Restaurant extends ChangeNotifier {
@@ -240,21 +242,80 @@ class Restaurant extends ChangeNotifier {
           Addon(name: "Sour Cream", price: 0.20),
         ]),
   ];
-}
 
 // G E T T E R S
 
+  List<CartItem> get getCart => cart;
+
 // O P E R A T I O N S
+
+  final List<CartItem> cart = [];
 
 //add to cart
 
+  void addToCart(Food food, List<Addon> selectedAddons) {
+    CartItem? cartItem = cart.firstWhereOrNull((item) {
+      bool isSameFood = item.food == food;
+      bool isSameAddons =
+          ListEquality().equals(item.selectedAddons, selectedAddons);
+
+      return isSameFood && isSameAddons;
+    });
+
+    if (cartItem != null) {
+      cartItem.quantity++;
+    } else {
+      cart.add(CartItem(food: food, selectedAddons: selectedAddons));
+    }
+    notifyListeners();
+  }
+
 //remove from cart
+  void removeFromCart(CartItem cartItem) {
+    int cartIndex = cart.indexOf(cartItem);
+
+    if (cartIndex != -1) {
+      if (cart[cartIndex].quantity > 1) {
+        cart[cartIndex].quantity--;
+      } else {
+        cart.removeAt(cartIndex);
+      }
+    }
+    notifyListeners();
+  }
 
 //display amount of items in cart
 
+  int getTotalItemCount() {
+    int totalItemCount = 0;
+
+    for (CartItem cartItem in cart) {
+      totalItemCount += cartItem.quantity;
+    }
+    return totalItemCount;
+  }
+
 //display total price of items in cart
 
+  double getTotalPrice() {
+    double total = 0.0;
+
+    for (CartItem cartItem in cart) {
+      double itemTotal = cartItem.totalPrice;
+      for (Addon addon in cartItem.selectedAddons) {
+        itemTotal += addon.price;
+      }
+      total += itemTotal * cartItem.quantity;
+    }
+    return total;
+  }
+
 //clear cart
+
+  void clearCart() {
+    cart.clear();
+    notifyListeners();
+  }
 
 // H E L P E R S
 
@@ -263,3 +324,4 @@ class Restaurant extends ChangeNotifier {
 //convert double value to money
 
 //format list of addons into a string summary
+}
