@@ -87,16 +87,31 @@ class MyCartTile extends StatelessWidget {
                     height: cartItem.selectedAddons.isEmpty ? 0 : 60,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.symmetric(horizontal: 8),
                       children: cartItem.selectedAddons
                           .map(
-                            (addon) => FilterChip(
-                              label: Row(
-                                children: [
-                                  Text(addon.name + " "),
-                                  Text("\$" + addon.price.toString())
-                                ],
+                            (addon) => Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: FilterChip(
+                                shape: StadiumBorder(
+                                    side: BorderSide(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary)),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.surface,
+                                labelStyle: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inversePrimary),
+                                label: Row(
+                                  children: [
+                                    Text(addon.name + " "),
+                                    Text("(\$" + addon.price.toString() + ")")
+                                  ],
+                                ),
+                                onSelected: (value) {},
                               ),
-                              onSelected: (value) {},
                             ),
                           )
                           .toList(),

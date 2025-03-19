@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:food_app/models/cart_item.dart';
 import 'package:food_app/models/food.dart';
+import 'package:intl/intl.dart';
 
 class Restaurant extends ChangeNotifier {
   final List<Food> menu = [
@@ -321,7 +322,44 @@ class Restaurant extends ChangeNotifier {
 
 //generate a receipt
 
-//convert double value to money
+  String displayCartReceipt() {
+    final receipt = StringBuffer();
+    receipt.writeln("Here's Your receipt");
+    receipt.writeln();
 
+    //format the date to include up the seconds only
+    String formattedDate =
+        DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+
+    receipt.writeln("Date: $formattedDate");
+    receipt.writeln();
+    receipt.writeln("--------------------");
+
+    for (final cartItem in cart) {
+      receipt.writeln(
+          "${cartItem.quantity} x ${cartItem.food.name} - ${formatPrice(cartItem.food.price)} ");
+      if (cartItem.selectedAddons.isNotEmpty) {
+        receipt.writeln("   Addons: ${formatAddons(cartItem.selectedAddons)}");
+      }
+      receipt.writeln();
+    }
+    receipt.writeln("--------------------");
+    receipt.writeln();
+    receipt.writeln("Total items: ${getTotalItemCount()}");
+    receipt.writeln("Total price: ${formatPrice(getTotalPrice())}");
+
+    return receipt.toString();
+  }
+
+//convert double value to money
+  String formatPrice(double money) {
+    return "\$${money.toStringAsFixed(2)}";
+  }
 //format list of addons into a string summary
+
+  String formatAddons(List<Addon> addons) {
+    return addons
+        .map((addon) => "${addon.name} (${formatPrice(addon.price)})")
+        .join(", ");
+  }
 }
