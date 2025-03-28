@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 class MyReceipt extends StatelessWidget {
   MyReceipt({super.key});
 
-  String formattedTime =
+  final String formattedTime =
       DateFormat('HH:mm').format(DateTime.now().add(Duration(minutes: 30)));
 
   @override

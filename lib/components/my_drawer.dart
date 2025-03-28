@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/auth/login_or_register.dart';
+import 'package:food_app/services/auth/login_or_register.dart';
 import 'package:food_app/components/my_drawer_tile.dart';
 import 'package:food_app/pages/settings_page.dart';
 

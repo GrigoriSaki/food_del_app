@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/components/my_button.dart';
 import 'package:food_app/components/text_field.dart';
+import 'package:food_app/services/auth/auth_service.dart';
 
 class RegisterPage extends StatefulWidget {
   RegisterPage({super.key, required this.onPressed});
@@ -9,6 +10,49 @@ class RegisterPage extends StatefulWidget {
   final TextEditingController passwordConfirmController =
       TextEditingController();
   final void Function()? onPressed;
+  void register(context) async {
+    AuthService authService = AuthService();
+    if (passwordController.text == passwordConfirmController.text) {
+      try {
+        await authService.signUpWithEmailAndPassword(
+            emailController.text, passwordController.text);
+      } catch (e) {
+        print(e.toString());
+        showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text("Error"),
+                content: Text(e.toString()),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK"),
+                  )
+                ],
+              );
+            });
+      }
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Center(child: Text("Passwords do not match")),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("OK"),
+                )
+              ],
+            );
+          });
+    }
+  }
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -72,7 +116,11 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
 
               //Register Button
-              MyButton(onTap: () {}, buttonText: "Register"),
+              MyButton(
+                  onTap: () {
+                    return widget.register(context);
+                  },
+                  buttonText: "Register"),
 
               //Login or register? switch
               Row(

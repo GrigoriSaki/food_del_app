@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/components/myReceipt.dart';
+import 'package:food_app/pages/home_page.dart';
 
 class DeliveryPorgressPage extends StatelessWidget {
   const DeliveryPorgressPage({super.key});
@@ -8,6 +9,15 @@ class DeliveryPorgressPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => HomePage())),
+              icon: Icon(
+                Icons.home,
+                color: Theme.of(context).colorScheme.inversePrimary,
+              ))
+        ],
         centerTitle: true,
         title: Text("Delivery in progress.."),
       ),

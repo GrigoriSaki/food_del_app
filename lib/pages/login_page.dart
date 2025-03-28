@@ -2,31 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:food_app/components/my_button.dart';
 import 'package:food_app/components/text_field.dart';
 import 'package:food_app/pages/home_page.dart';
+import 'package:food_app/services/auth/auth_service.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onPressed;
   LoginPage({super.key, required this.onPressed});
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  void login(context) async {
+    AuthService authService = AuthService();
+
+    try {
+      await authService.signInWithEmailAndPassword(
+          emailController.text, passwordController.text);
+    } catch (e) {
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Error"),
+                content: Text(e.toString()),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK"),
+                  )
+                ],
+              ));
+    }
+  }
 
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-  void login() {
-    /*
-
-    Authentication Functionality
-
-
-    */
-
-    //Navigate to Home Page
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => HomePage()));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +86,11 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               //Login Button
-              MyButton(onTap: login, buttonText: "Log In"),
+              MyButton(
+                  onTap: () {
+                    return widget.login(context);
+                  },
+                  buttonText: "Log In"),
 
               //Login or register? switch
               Row(
