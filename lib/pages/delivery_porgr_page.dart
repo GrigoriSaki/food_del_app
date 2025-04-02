@@ -1,9 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/components/myReceipt.dart';
+import 'package:food_app/models/restaurant.dart';
 import 'package:food_app/pages/home_page.dart';
+import 'package:food_app/services/database/firestore.dart';
+import 'package:provider/provider.dart';
 
-class DeliveryPorgressPage extends StatelessWidget {
+class DeliveryPorgressPage extends StatefulWidget {
   const DeliveryPorgressPage({super.key});
+
+  @override
+  State<DeliveryPorgressPage> createState() => _DeliveryPorgressPageState();
+}
+
+class _DeliveryPorgressPageState extends State<DeliveryPorgressPage> {
+  FirestoreService db = FirestoreService();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    String receipt = context.read<Restaurant>().displayCartReceipt();
+    db.saveOrderToDatabase(receipt);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +40,18 @@ class DeliveryPorgressPage extends StatelessWidget {
         centerTitle: true,
         title: Text("Delivery in progress.."),
       ),
+      bottomNavigationBar: navigationBottomBar(context),
       body: SingleChildScrollView(
         child: Column(
-          children: [MyReceipt(), navigationBottomBar(context)],
+          children: [
+            MyReceipt(),
+          ],
         ),
       ),
     );
   }
 
   //Bottom Navigation Bar
-
   Widget navigationBottomBar(BuildContext context) {
     return Container(
       height: 80,

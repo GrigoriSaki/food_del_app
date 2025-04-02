@@ -15,6 +15,8 @@ class LoginPage extends StatefulWidget {
     try {
       await authService.signInWithEmailAndPassword(
           emailController.text, passwordController.text);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomePage()));
     } catch (e) {
       showDialog(
           context: context,
